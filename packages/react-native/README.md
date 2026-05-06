@@ -36,7 +36,11 @@ import "@copilotkit/react-native/polyfills/location";
 ## Quick start
 
 ```tsx
-import { CopilotKitProvider, useAgent, useCopilotKit } from "@copilotkit/react-native";
+import {
+  CopilotKitProvider,
+  useAgent,
+  useCopilotKit,
+} from "@copilotkit/react-native";
 
 export default function App() {
   return (
