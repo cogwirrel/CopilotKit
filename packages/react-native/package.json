@@ -72,6 +72,7 @@
     "@copilotkit/core": "workspace:*",
     "@copilotkit/react-core": "workspace:*",
     "@copilotkit/shared": "workspace:*",
+    "react-native-markdown-display": "^7.0.2",
     "text-encoding": "^0.7.0",
     "web-streams-polyfill": "^4.2.0"
   },
