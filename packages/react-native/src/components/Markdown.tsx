@@ -1,7 +1,13 @@
 import React, { useMemo } from "react";
-import { StyleSheet } from "react-native";
-import MarkdownDisplay from "react-native-markdown-display";
-import type { MarkdownProps } from "react-native-markdown-display";
+import { StreamdownText } from "react-native-streamdown";
+
+/**
+ * Style object accepted by `react-native-enriched-markdown` (and therefore
+ * `react-native-streamdown`).  Each key targets a markdown element; the
+ * available properties vary per element — see the enriched-markdown style
+ * reference for the full list.
+ */
+export type MarkdownStyle = Record<string, Record<string, unknown>>;
 
 /**
  * Props for the CopilotMarkdown component.
@@ -10,7 +16,9 @@ export interface CopilotMarkdownProps {
   /** Markdown string to render. */
   content: string;
   /** Optional style overrides merged on top of the defaults. */
-  style?: MarkdownProps["style"];
+  style?: MarkdownStyle;
+  /** Whether to enable the streaming fade-in animation (default: true). */
+  streamingAnimation?: boolean;
 }
 
 /**
@@ -19,108 +27,98 @@ export interface CopilotMarkdownProps {
  * Exported so consumers can spread and extend:
  * ```ts
  * import { defaultMarkdownStyles } from "@copilotkit/react-native";
- * const custom = { ...defaultMarkdownStyles, heading1: { fontSize: 28 } };
+ * const custom = { ...defaultMarkdownStyles, h1: { fontSize: 28 } };
  * ```
  */
-export const defaultMarkdownStyles = StyleSheet.create({
-  body: {
+export const defaultMarkdownStyles: MarkdownStyle = {
+  paragraph: {
     fontSize: 16,
     lineHeight: 24,
     color: "#1a1a1a",
+    marginTop: 4,
+    marginBottom: 4,
   },
-  heading1: {
+  h1: {
     fontSize: 24,
-    fontWeight: "bold" as const,
+    fontWeight: "bold",
     marginTop: 12,
     marginBottom: 8,
     color: "#111111",
   },
-  heading2: {
+  h2: {
     fontSize: 20,
-    fontWeight: "bold" as const,
+    fontWeight: "bold",
     marginTop: 10,
     marginBottom: 6,
     color: "#111111",
   },
-  heading3: {
+  h3: {
     fontSize: 18,
-    fontWeight: "600" as const,
+    fontWeight: "600",
     marginTop: 8,
     marginBottom: 4,
     color: "#222222",
   },
   strong: {
-    fontWeight: "bold" as const,
+    fontWeight: "bold",
   },
   em: {
-    fontStyle: "italic" as const,
+    fontStyle: "italic",
   },
   link: {
     color: "#0066cc",
-    textDecorationLine: "underline" as const,
+    underline: true,
   },
   blockquote: {
     backgroundColor: "#f5f5f5",
-    borderLeftWidth: 4,
-    borderLeftColor: "#cccccc",
-    paddingLeft: 12,
-    paddingVertical: 4,
-    marginVertical: 8,
+    borderWidth: 4,
+    borderColor: "#cccccc",
+    gapWidth: 12,
   },
-  code_inline: {
+  inlineCode: {
     backgroundColor: "#f0f0f0",
-    borderRadius: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
     fontFamily: "monospace",
     fontSize: 14,
   },
-  code_block: {
+  codeBlock: {
     backgroundColor: "#f0f0f0",
     borderRadius: 8,
     padding: 12,
     fontFamily: "monospace",
     fontSize: 14,
-    marginVertical: 8,
   },
-  fence: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    padding: 12,
-    fontFamily: "monospace",
-    fontSize: 14,
-    marginVertical: 8,
+  list: {
+    marginTop: 4,
+    marginBottom: 4,
   },
-  list_item: {
-    marginVertical: 2,
-  },
-  bullet_list: {
-    marginVertical: 4,
-  },
-  ordered_list: {
-    marginVertical: 4,
-  },
-  paragraph: {
-    marginVertical: 4,
-  },
-});
+};
 
 /**
- * Renders markdown content using `react-native-markdown-display` with
+ * Renders markdown content using `react-native-streamdown` with
  * pre-configured styles suited for CopilotKit chat bubbles.
+ *
+ * `react-native-streamdown` processes incomplete streaming markdown in the
+ * background, rendering incrementally without visual glitches — ideal for
+ * displaying LLM output as it arrives.
  *
  * Custom styles are merged on top of the defaults so callers only need
  * to override what they want to change.
  */
-export function CopilotMarkdown({ content, style }: CopilotMarkdownProps) {
+export function CopilotMarkdown({
+  content,
+  style,
+  streamingAnimation = true,
+}: CopilotMarkdownProps) {
   const mergedStyles = useMemo(() => {
     if (!style) return defaultMarkdownStyles;
     return { ...defaultMarkdownStyles, ...style };
   }, [style]);
 
   return (
-    <MarkdownDisplay style={mergedStyles} mergeStyle>
-      {content}
-    </MarkdownDisplay>
+    <StreamdownText
+      markdown={content}
+      markdownStyle={mergedStyles}
+      streamingAnimation={streamingAnimation}
+    />
   );
 }

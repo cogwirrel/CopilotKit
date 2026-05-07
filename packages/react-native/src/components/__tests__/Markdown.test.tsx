@@ -14,14 +14,13 @@ vi.mock("react-native", () => ({
   Text: "Text",
 }));
 
-// Capture the props passed to MarkdownDisplay
-let lastMarkdownProps: any = null;
+// Capture the props passed to StreamdownText
+let lastStreamdownProps: any = null;
 
-vi.mock("react-native-markdown-display", () => ({
-  __esModule: true,
-  default: function MockMarkdownDisplay(props: any) {
-    lastMarkdownProps = props;
-    return React.createElement("div", { "data-testid": "markdown" }, props.children);
+vi.mock("react-native-streamdown", () => ({
+  StreamdownText: function MockStreamdownText(props: any) {
+    lastStreamdownProps = props;
+    return React.createElement("div", { "data-testid": "markdown" }, props.markdown);
   },
 }));
 
@@ -32,7 +31,7 @@ import { CopilotMarkdown, defaultMarkdownStyles } from "../Markdown";
 
 describe("CopilotMarkdown", () => {
   beforeEach(() => {
-    lastMarkdownProps = null;
+    lastStreamdownProps = null;
   });
 
   it("renders without crashing", () => {
@@ -40,56 +39,62 @@ describe("CopilotMarkdown", () => {
     expect(container).toBeTruthy();
   });
 
-  it("passes content as children to MarkdownDisplay", () => {
+  it("passes content as markdown prop to StreamdownText", () => {
     render(<CopilotMarkdown content="# Title" />);
-    expect(lastMarkdownProps).not.toBeNull();
-    expect(lastMarkdownProps.children).toBe("# Title");
+    expect(lastStreamdownProps).not.toBeNull();
+    expect(lastStreamdownProps.markdown).toBe("# Title");
   });
 
   it("uses default styles when no custom style is provided", () => {
     render(<CopilotMarkdown content="test" />);
-    expect(lastMarkdownProps.style).toBe(defaultMarkdownStyles);
+    expect(lastStreamdownProps.markdownStyle).toBe(defaultMarkdownStyles);
   });
 
   it("merges custom styles with defaults", () => {
-    const customStyle = { body: { fontSize: 20, color: "#000" } };
+    const customStyle = { paragraph: { fontSize: 20, color: "#000" } };
     render(<CopilotMarkdown content="test" style={customStyle} />);
 
-    // Custom should override the body style
-    expect(lastMarkdownProps.style.body).toEqual({ fontSize: 20, color: "#000" });
+    // Custom should override the paragraph style
+    expect(lastStreamdownProps.markdownStyle.paragraph).toEqual({
+      fontSize: 20,
+      color: "#000",
+    });
     // Other defaults should still be present
-    expect(lastMarkdownProps.style.heading1).toEqual(defaultMarkdownStyles.heading1);
-    expect(lastMarkdownProps.style.code_block).toEqual(defaultMarkdownStyles.code_block);
+    expect(lastStreamdownProps.markdownStyle.h1).toEqual(defaultMarkdownStyles.h1);
+    expect(lastStreamdownProps.markdownStyle.codeBlock).toEqual(
+      defaultMarkdownStyles.codeBlock,
+    );
   });
 
   it("renders safely with empty content", () => {
     const { container } = render(<CopilotMarkdown content="" />);
     expect(container).toBeTruthy();
-    expect(lastMarkdownProps.children).toBe("");
+    expect(lastStreamdownProps.markdown).toBe("");
   });
 
-  it("enables mergeStyle on the underlying MarkdownDisplay", () => {
+  it("enables streamingAnimation by default", () => {
     render(<CopilotMarkdown content="test" />);
-    expect(lastMarkdownProps.mergeStyle).toBe(true);
+    expect(lastStreamdownProps.streamingAnimation).toBe(true);
+  });
+
+  it("allows disabling streamingAnimation", () => {
+    render(<CopilotMarkdown content="test" streamingAnimation={false} />);
+    expect(lastStreamdownProps.streamingAnimation).toBe(false);
   });
 });
 
 describe("defaultMarkdownStyles", () => {
   it("exports a style object with expected keys", () => {
-    expect(defaultMarkdownStyles.body).toBeDefined();
-    expect(defaultMarkdownStyles.heading1).toBeDefined();
-    expect(defaultMarkdownStyles.heading2).toBeDefined();
-    expect(defaultMarkdownStyles.heading3).toBeDefined();
+    expect(defaultMarkdownStyles.paragraph).toBeDefined();
+    expect(defaultMarkdownStyles.h1).toBeDefined();
+    expect(defaultMarkdownStyles.h2).toBeDefined();
+    expect(defaultMarkdownStyles.h3).toBeDefined();
     expect(defaultMarkdownStyles.strong).toBeDefined();
     expect(defaultMarkdownStyles.em).toBeDefined();
     expect(defaultMarkdownStyles.link).toBeDefined();
     expect(defaultMarkdownStyles.blockquote).toBeDefined();
-    expect(defaultMarkdownStyles.code_inline).toBeDefined();
-    expect(defaultMarkdownStyles.code_block).toBeDefined();
-    expect(defaultMarkdownStyles.fence).toBeDefined();
-    expect(defaultMarkdownStyles.list_item).toBeDefined();
-    expect(defaultMarkdownStyles.bullet_list).toBeDefined();
-    expect(defaultMarkdownStyles.ordered_list).toBeDefined();
-    expect(defaultMarkdownStyles.paragraph).toBeDefined();
+    expect(defaultMarkdownStyles.inlineCode).toBeDefined();
+    expect(defaultMarkdownStyles.codeBlock).toBeDefined();
+    expect(defaultMarkdownStyles.list).toBeDefined();
   });
 });
