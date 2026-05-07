@@ -42,3 +42,20 @@ export {
   type CopilotKitCoreRuntimeConnectionStatus,
   type CopilotKitCoreErrorCode,
 } from "@copilotkit/core";
+
+// UI components
+export { CopilotChat } from "./components/CopilotChat";
+export type { CopilotChatProps } from "./components/CopilotChat";
+export { CopilotModal } from "./components/CopilotModal";
+export type { CopilotModalProps, CopilotModalRef } from "./components/CopilotModal";
+export { AssistantMessage } from "./components/messages/AssistantMessage";
+export type { AssistantMessageProps } from "./components/messages/AssistantMessage";
+export { UserMessage } from "./components/messages/UserMessage";
+export type { UserMessageProps } from "./components/messages/UserMessage";
+export { CopilotMarkdown, defaultMarkdownStyles } from "./components/Markdown";
+export type { CopilotMarkdownProps } from "./components/Markdown";
+
+// Hooks
+export { useRenderTool } from "./hooks/useRenderTool";
+export { RenderToolProvider, useRenderToolRegistry } from "./hooks/RenderToolContext";
+export type { RenderToolProps } from "./hooks/RenderToolContext";
