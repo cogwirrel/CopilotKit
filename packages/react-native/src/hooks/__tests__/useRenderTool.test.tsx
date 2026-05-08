@@ -22,9 +22,7 @@ vi.mock("@copilotkit/react-core/v2/headless", () => {
       // Require context — mirrors real behavior
       const ctx = require("react").useContext(hoisted.RealContext);
       if (!ctx) {
-        throw new Error(
-          "useCopilotKit must be used within CopilotKitProvider",
-        );
+        throw new Error("useCopilotKit must be used within CopilotKitProvider");
       }
       // Simulate addTool call
       hoisted.mockAddTool(_tool);
@@ -49,9 +47,7 @@ vi.mock("@copilotkit/react-core/v2/context", () => {
     useCopilotKit: () => {
       const ctx = _React.useContext(hoisted.RealContext);
       if (!ctx) {
-        throw new Error(
-          "useCopilotKit must be used within CopilotKitProvider",
-        );
+        throw new Error("useCopilotKit must be used within CopilotKitProvider");
       }
       return ctx;
     },

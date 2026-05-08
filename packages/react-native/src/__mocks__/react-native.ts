@@ -32,7 +32,7 @@ export const Image = createMockComponent("Image");
 
 export const Platform = {
   OS: "ios" as const,
-  select: <T,>(obj: { ios?: T; android?: T; default?: T }): T | undefined =>
+  select: <T>(obj: { ios?: T; android?: T; default?: T }): T | undefined =>
     obj.ios ?? obj.default,
 };
 

@@ -158,7 +158,8 @@ export const CopilotModal = forwardRef<CopilotModalRef, CopilotModalProps>(
       const props: Partial<CopilotChatProps> = {};
       if (agentName !== undefined) props.agentName = agentName;
       if (placeholder !== undefined) props.placeholder = placeholder;
-      if (initialMessages !== undefined) props.initialMessages = initialMessages;
+      if (initialMessages !== undefined)
+        props.initialMessages = initialMessages;
       if (headerTitle !== undefined) props.headerTitle = headerTitle;
       return props;
     }, [agentName, placeholder, initialMessages, headerTitle]);
@@ -177,7 +178,11 @@ export const CopilotModal = forwardRef<CopilotModalRef, CopilotModalProps>(
         handleIndicatorStyle={styles.handleIndicator}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <CopilotChat {...chatProps} FlatListComponent={BottomSheetFlatList} disableKeyboardAvoiding />
+          <CopilotChat
+            {...chatProps}
+            FlatListComponent={BottomSheetFlatList}
+            disableKeyboardAvoiding
+          />
         </BottomSheetView>
       </BottomSheet>
     );

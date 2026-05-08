@@ -61,12 +61,7 @@ vi.mock("../../hooks/RenderToolContext", () => ({
 vi.mock("react-native", () => {
   const React = require("react");
   return {
-    FlatList: ({
-      data,
-      renderItem,
-      ListEmptyComponent,
-      keyExtractor,
-    }: any) => {
+    FlatList: ({ data, renderItem, ListEmptyComponent, keyExtractor }: any) => {
       if (!data || data.length === 0) {
         return React.createElement(
           "div",
@@ -111,7 +106,13 @@ vi.mock("react-native", () => {
         "data-testid": "text-input",
         ...props,
       }),
-    TouchableOpacity: ({ children, onPress, disabled, testID, ...props }: any) =>
+    TouchableOpacity: ({
+      children,
+      onPress,
+      disabled,
+      testID,
+      ...props
+    }: any) =>
       React.createElement(
         "button",
         {
@@ -165,9 +166,7 @@ describe("CopilotChat", () => {
 
   it("renders suggestion pills when initialMessages provided", () => {
     const suggestions = ["Hello", "Help me"];
-    const { getByText } = render(
-      <CopilotChat initialMessages={suggestions} />,
-    );
+    const { getByText } = render(<CopilotChat initialMessages={suggestions} />);
 
     expect(getByText("Hello")).toBeTruthy();
     expect(getByText("Help me")).toBeTruthy();
@@ -191,9 +190,7 @@ describe("CopilotChat", () => {
   });
 
   it("shows loading indicator when agent is running", () => {
-    hoisted.mockAgent.messages = [
-      { id: "1", role: "user", content: "Hi" },
-    ];
+    hoisted.mockAgent.messages = [{ id: "1", role: "user", content: "Hi" }];
     hoisted.mockAgent.isRunning = true;
 
     const { getAllByTestId } = render(<CopilotChat />);
@@ -349,9 +346,7 @@ describe("CopilotChat", () => {
   });
 
   it("shows error message when runAgent fails", async () => {
-    hoisted.mockRunAgent.mockRejectedValueOnce(
-      new Error("Network timeout"),
-    );
+    hoisted.mockRunAgent.mockRejectedValueOnce(new Error("Network timeout"));
 
     const { getByTestId, getByText } = render(<CopilotChat />);
 

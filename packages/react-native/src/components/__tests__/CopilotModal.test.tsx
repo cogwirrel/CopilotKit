@@ -230,9 +230,7 @@ describe("CopilotModal", () => {
 
   describe("CopilotChat integration", () => {
     it("passes agentName to CopilotChat", () => {
-      const { getByTestId } = render(
-        <CopilotModal agentName="test-agent" />,
-      );
+      const { getByTestId } = render(<CopilotModal agentName="test-agent" />);
 
       const chat = getByTestId("copilot-chat");
       expect(chat.getAttribute("agentName")).toBe("test-agent");

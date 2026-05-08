@@ -1,4 +1,11 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef, useSyncExternalStore } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 
 /**
  * Props passed to a render tool function.
@@ -62,7 +69,11 @@ const RenderToolCtx = createContext<RenderToolContextValue | null>(null);
  * Provider that maintains the render tool registry.
  * Should be nested inside CopilotKitProvider.
  */
-export function RenderToolProvider({ children }: { children: React.ReactNode }) {
+export function RenderToolProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const storeRef = useRef<RegistryStore>(createRegistryStore());
 
   const register = useCallback(
@@ -88,7 +99,9 @@ export function RenderToolProvider({ children }: { children: React.ReactNode }) 
     [register],
   );
 
-  return <RenderToolCtx.Provider value={value}>{children}</RenderToolCtx.Provider>;
+  return (
+    <RenderToolCtx.Provider value={value}>{children}</RenderToolCtx.Provider>
+  );
 }
 
 /**

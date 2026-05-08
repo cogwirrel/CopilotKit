@@ -14,7 +14,11 @@ npm install react react-native @gorhom/bottom-sheet react-native-gesture-handler
 
 ```tsx
 import "@copilotkit/react-native/polyfills";
-import { CopilotKitProvider, CopilotChat, useRenderTool } from "@copilotkit/react-native";
+import {
+  CopilotKitProvider,
+  CopilotChat,
+  useRenderTool,
+} from "@copilotkit/react-native";
 import { z } from "zod";
 
 function App() {
@@ -47,7 +51,7 @@ Inline chat panel. Renders a message list with an input bar.
 ```tsx
 import { CopilotChat } from "@copilotkit/react-native";
 
-<CopilotChat placeholder="Type a message..." />
+<CopilotChat placeholder="Type a message..." />;
 ```
 
 ### CopilotModal
@@ -60,7 +64,7 @@ import { useRef } from "react";
 
 const modalRef = useRef<CopilotModalRef>(null);
 
-<CopilotModal ref={modalRef} headerTitle="Assistant" />
+<CopilotModal ref={modalRef} headerTitle="Assistant" />;
 
 // Open it:
 modalRef.current?.open();
@@ -73,7 +77,7 @@ Renders Markdown text with sensible React Native styling.
 ```tsx
 import { CopilotMarkdown } from "@copilotkit/react-native";
 
-<CopilotMarkdown content="**Hello** from CopilotKit!" />
+<CopilotMarkdown content="**Hello** from CopilotKit!" />;
 ```
 
 ### AssistantMessage / UserMessage

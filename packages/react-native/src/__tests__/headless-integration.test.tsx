@@ -166,7 +166,8 @@ vi.mock("@gorhom/bottom-sheet", () => {
     ),
     BottomSheetBackdrop: () => null,
     BottomSheetFlatList: "FlatList",
-    BottomSheetView: (props: any) => React.createElement("div", null, props.children),
+    BottomSheetView: (props: any) =>
+      React.createElement("div", null, props.children),
   };
 });
 
@@ -389,5 +390,4 @@ describe("Headless integration", () => {
       spy.mockRestore();
     });
   });
-
 });

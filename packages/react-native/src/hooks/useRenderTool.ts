@@ -64,10 +64,7 @@ export interface UseRenderToolOptions<T extends Record<string, unknown>> {
  */
 export function useRenderTool<
   T extends Record<string, unknown> = Record<string, unknown>,
->(
-  options: UseRenderToolOptions<T>,
-  deps?: ReadonlyArray<unknown>,
-): void {
+>(options: UseRenderToolOptions<T>, deps?: ReadonlyArray<unknown>): void {
   const { name, description, parameters, render, handler, agentId } = options;
   const { register } = useRenderToolContext();
 
@@ -93,10 +90,7 @@ export function useRenderTool<
     const stableRender: RenderToolFunction<T> = (props) =>
       renderRef.current(props);
 
-    const unregister = register(
-      name,
-      stableRender as RenderToolFunction,
-    );
+    const unregister = register(name, stableRender as RenderToolFunction);
     return unregister;
   }, [name, register]);
 }

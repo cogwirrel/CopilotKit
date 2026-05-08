@@ -8,7 +8,17 @@ vi.mock("react-native", () => {
   const React = require("react");
 
   const View = React.forwardRef(
-    ({ children, style, testID, accessibilityLabel, accessibilityRole, ...rest }: any, ref: any) =>
+    (
+      {
+        children,
+        style,
+        testID,
+        accessibilityLabel,
+        accessibilityRole,
+        ...rest
+      }: any,
+      ref: any,
+    ) =>
       React.createElement(
         "div",
         {
@@ -39,8 +49,9 @@ vi.mock("react-native", () => {
     }
   };
 
-  const AnimatedView = React.forwardRef(({ children, style, ...rest }: any, ref: any) =>
-    React.createElement("div", { ref, style, ...rest }, children),
+  const AnimatedView = React.forwardRef(
+    ({ children, style, ...rest }: any, ref: any) =>
+      React.createElement("div", { ref, style, ...rest }, children),
   );
   AnimatedView.displayName = "Animated.View";
 
@@ -81,7 +92,8 @@ vi.mock("react-native", () => {
 
   const StyleSheet = {
     create: (styles: any) => styles,
-    flatten: (style: any) => (Array.isArray(style) ? Object.assign({}, ...style) : style || {}),
+    flatten: (style: any) =>
+      Array.isArray(style) ? Object.assign({}, ...style) : style || {},
   };
 
   return {
@@ -96,7 +108,11 @@ vi.mock("react-native", () => {
 vi.mock("../../Markdown", () => ({
   CopilotMarkdown: ({ content }: { content: string }) => {
     const React = require("react");
-    return React.createElement("div", { "data-testid": "copilot-markdown" }, content);
+    return React.createElement(
+      "div",
+      { "data-testid": "copilot-markdown" },
+      content,
+    );
   },
 }));
 
@@ -136,9 +152,7 @@ describe("AssistantMessage", () => {
   });
 
   it("does not display timestamp when not provided", () => {
-    const { container } = render(
-      <AssistantMessage content="No timestamp" />,
-    );
+    const { container } = render(<AssistantMessage content="No timestamp" />);
     // Should only contain the message text (via markdown mock)
     expect(container.textContent).toBe("No timestamp");
   });
@@ -146,9 +160,7 @@ describe("AssistantMessage", () => {
 
 describe("UserMessage", () => {
   it("renders plain text content", () => {
-    const { container } = render(
-      <UserMessage content="Hello from the user" />,
-    );
+    const { container } = render(<UserMessage content="Hello from the user" />);
     expect(container.textContent).toContain("Hello from the user");
   });
 
@@ -161,9 +173,7 @@ describe("UserMessage", () => {
   });
 
   it("does not display timestamp when not provided", () => {
-    const { container } = render(
-      <UserMessage content="Just text" />,
-    );
+    const { container } = render(<UserMessage content="Just text" />);
     expect(container.textContent).toBe("Just text");
   });
 });

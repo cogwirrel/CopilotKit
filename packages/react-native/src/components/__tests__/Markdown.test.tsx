@@ -20,7 +20,11 @@ let lastStreamdownProps: any = null;
 vi.mock("react-native-streamdown", () => ({
   StreamdownText: function MockStreamdownText(props: any) {
     lastStreamdownProps = props;
-    return React.createElement("div", { "data-testid": "markdown" }, props.markdown);
+    return React.createElement(
+      "div",
+      { "data-testid": "markdown" },
+      props.markdown,
+    );
   },
 }));
 
@@ -60,7 +64,9 @@ describe("CopilotMarkdown", () => {
       color: "#000",
     });
     // Other defaults should still be present
-    expect(lastStreamdownProps.markdownStyle.h1).toEqual(defaultMarkdownStyles.h1);
+    expect(lastStreamdownProps.markdownStyle.h1).toEqual(
+      defaultMarkdownStyles.h1,
+    );
     expect(lastStreamdownProps.markdownStyle.codeBlock).toEqual(
       defaultMarkdownStyles.codeBlock,
     );

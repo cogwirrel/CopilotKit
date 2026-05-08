@@ -42,9 +42,7 @@ export function AssistantMessage({
         {isLoading ? <TypingIndicator /> : null}
       </View>
       {timestamp && (
-        <Text style={styles.timestamp}>
-          {formatTimestamp(timestamp)}
-        </Text>
+        <Text style={styles.timestamp}>{formatTimestamp(timestamp)}</Text>
       )}
     </View>
   );

@@ -221,7 +221,9 @@ export function CopilotChat({
         return (
           <AssistantMessage
             content={item.content ?? ""}
-            isLoading={isRunning && item.id === listItems[listItems.length - 1]?.id}
+            isLoading={
+              isRunning && item.id === listItems[listItems.length - 1]?.id
+            }
           />
         );
       }
@@ -234,17 +236,20 @@ export function CopilotChat({
           try {
             args = JSON.parse(tc.function.arguments || "{}");
           } catch (e) {
-            console.warn(`[CopilotChat] Failed to parse tool call arguments for ${tc.function.name}:`, e);
+            console.warn(
+              `[CopilotChat] Failed to parse tool call arguments for ${tc.function.name}:`,
+              e,
+            );
           }
-          const status = executingToolCallIds.has(tc.id) ? "executing" : "complete";
+          const status = executingToolCallIds.has(tc.id)
+            ? "executing"
+            : "complete";
           return renderer({ args, status });
         }
         // Subtle indicator for unregistered tool calls
         return (
           <View style={styles.toolCallIndicator}>
-            <Text style={styles.toolCallText}>
-              Called: {tc.function.name}
-            </Text>
+            <Text style={styles.toolCallText}>Called: {tc.function.name}</Text>
           </View>
         );
       }
@@ -258,10 +263,7 @@ export function CopilotChat({
     [isRunning, listItems, toolRenderers, executingToolCallIds],
   );
 
-  const keyExtractor = useCallback(
-    (item: ChatListItem) => item.id,
-    [],
-  );
+  const keyExtractor = useCallback((item: ChatListItem) => item.id, []);
 
   // Empty state component
   const emptyComponent = useMemo(

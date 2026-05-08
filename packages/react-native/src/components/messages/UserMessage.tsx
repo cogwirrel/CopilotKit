@@ -32,9 +32,7 @@ export function UserMessage({ content, timestamp, style }: UserMessageProps) {
         <Text style={styles.text}>{content}</Text>
       </View>
       {timestamp && (
-        <Text style={styles.timestamp}>
-          {formatTimestamp(timestamp)}
-        </Text>
+        <Text style={styles.timestamp}>{formatTimestamp(timestamp)}</Text>
       )}
     </View>
   );
