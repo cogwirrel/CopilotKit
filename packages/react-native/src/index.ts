@@ -25,15 +25,15 @@ export type { CopilotKitNativeProviderProps } from "./CopilotKitProvider";
 // Provider props alias (mirrors web's CopilotKitProviderProps)
 export type { CopilotKitNativeProviderProps as CopilotKitProviderProps } from "./CopilotKitProvider";
 
-// CopilotSidebar and CopilotPopup are intentionally not provided.
-// React Native apps build their own chat UI using CopilotChat (headless)
-// or CopilotModal (bottom sheet wrapper).
-
 // Headless chat components (no DOM, consumer provides UI)
 export { CopilotChat } from "./CopilotChat";
 export type { CopilotChatProps } from "./CopilotChat";
 export { CopilotModal } from "./CopilotModal";
 export type { CopilotModalProps } from "./CopilotModal";
+
+// Pre-built UI components
+export { CopilotSidebar } from "./CopilotSidebar";
+export type { CopilotSidebarProps, CopilotSidebarHandle } from "./CopilotSidebar";
 
 // Re-export context and hooks from react-core (platform-agnostic)
 export {
