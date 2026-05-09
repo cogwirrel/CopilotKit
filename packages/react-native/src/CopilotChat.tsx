@@ -1,6 +1,9 @@
-import React, { useEffect, useMemo, useRef, type ReactNode } from "react";
+import React, { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 import { useAgent } from "@copilotkit/react-core/v2/headless";
+import { useCopilotKit } from "@copilotkit/react-core/v2/context";
 import { DEFAULT_AGENT_ID } from "@copilotkit/shared";
+import type { CopilotKitCoreErrorCode } from "@copilotkit/core";
 
 export interface CopilotChatProps {
   /**
@@ -16,6 +19,33 @@ export interface CopilotChatProps {
    * compatibility and will be removed in a future release.
    */
   agentName?: string;
+
+  /**
+   * Thread ID for this chat session. When provided, the chat will resume
+   * the specified thread. Matches the web SDK's CopilotChat `threadId` prop.
+   */
+  threadId?: string;
+
+  /**
+   * Error handler scoped to this chat's agent. Fires in addition to the
+   * provider-level onError (does not suppress it). Receives only errors
+   * whose context.agentId matches this chat's agent.
+   */
+  onError?: (event: {
+    error: Error;
+    code: CopilotKitCoreErrorCode;
+    context: Record<string, any>;
+  }) => void | Promise<void>;
+
+  /**
+   * Throttle interval (in milliseconds) for re-renders triggered by message
+   * change notifications. Overrides the provider-level `defaultThrottleMs`
+   * for this chat instance. Forwarded to the internal `useAgent()` hook.
+   *
+   * @default undefined -- inherits from provider `defaultThrottleMs`;
+   * if that is also unset, re-renders are unthrottled.
+   */
+  throttleMs?: number;
 
   /**
    * Optional children rendered inside the chat context.
@@ -44,8 +74,11 @@ export interface CopilotChatProps {
 export function CopilotChat({
   agentId,
   agentName,
+  threadId,
+  onError,
+  throttleMs,
   children,
-  ...rest
+  ..._rest
 }: CopilotChatProps) {
   const resolvedAgentId = agentId ?? agentName ?? DEFAULT_AGENT_ID;
 
@@ -66,7 +99,45 @@ export function CopilotChat({
     }
   }, [agentName, agentId]);
 
-  useAgent({ agentId: resolvedAgentId });
+  const { agent } = useAgent({ agentId: resolvedAgentId, throttleMs });
+
+  // Set threadId on the agent when provided
+  useEffect(() => {
+    if (threadId) {
+      agent.threadId = threadId;
+    }
+  }, [agent, threadId]);
+
+  // onError subscription -- forward core errors scoped to this chat's agent
+  const { copilotkit } = useCopilotKit();
+  const onErrorRef = useRef(onError);
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
+
+  useEffect(() => {
+    if (!onErrorRef.current) return;
+
+    const subscription = copilotkit.subscribe({
+      onError: (event) => {
+        // Only forward errors that match this chat's agent
+        if (
+          event.context?.agentId === resolvedAgentId ||
+          !event.context?.agentId
+        ) {
+          onErrorRef.current?.({
+            error: event.error,
+            code: event.code,
+            context: event.context,
+          });
+        }
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [copilotkit, resolvedAgentId]);
 
   return <>{children}</>;
 }
