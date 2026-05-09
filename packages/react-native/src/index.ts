@@ -34,6 +34,8 @@ export type { CopilotModalProps } from "./CopilotModal";
 // Pre-built UI components
 export { CopilotSidebar } from "./CopilotSidebar";
 export type { CopilotSidebarProps, CopilotSidebarHandle } from "./CopilotSidebar";
+export { CopilotPopup } from "./CopilotPopup";
+export type { CopilotPopupProps, CopilotPopupHandle } from "./CopilotPopup";
 
 // Re-export context and hooks from react-core (platform-agnostic)
 export {
