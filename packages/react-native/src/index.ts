@@ -14,6 +14,12 @@
 export { CopilotKitProvider } from "./CopilotKitProvider";
 export type { CopilotKitNativeProviderProps } from "./CopilotKitProvider";
 
+// Headless chat components (no DOM, consumer provides UI)
+export { CopilotChat } from "./CopilotChat";
+export type { CopilotChatProps } from "./CopilotChat";
+export { CopilotModal } from "./CopilotModal";
+export type { CopilotModalProps } from "./CopilotModal";
+
 // Re-export context and hooks from react-core (platform-agnostic)
 export {
   useCopilotKit,
