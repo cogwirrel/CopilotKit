@@ -22,6 +22,9 @@ import "./polyfills";
 export { CopilotKitProvider } from "./CopilotKitProvider";
 export type { CopilotKitNativeProviderProps } from "./CopilotKitProvider";
 
+// Provider props alias (mirrors web's CopilotKitProviderProps)
+export type { CopilotKitNativeProviderProps as CopilotKitProviderProps } from "./CopilotKitProvider";
+
 // Headless chat components (no DOM, consumer provides UI)
 export { CopilotChat } from "./CopilotChat";
 export type { CopilotChatProps } from "./CopilotChat";
@@ -48,11 +51,25 @@ export {
   useConfigureSuggestions,
   useAgentContext,
   useThreads,
+  useRenderTool,
   type UseAgentUpdate,
 } from "@copilotkit/react-core/v2/headless";
 
 // Re-export core types commonly needed
-export {
-  type CopilotKitCoreRuntimeConnectionStatus,
-  type CopilotKitCoreErrorCode,
+export type {
+  CopilotKitCoreRuntimeConnectionStatus,
+  CopilotKitCoreErrorCode,
+  Suggestion,
+  FrontendTool,
+  ToolCallStatus,
 } from "@copilotkit/core";
+
+// Re-export AG-UI types for consumer convenience (matches web SDK surface)
+export type {
+  Message,
+  AssistantMessage,
+  ToolCall,
+  ToolMessage,
+  AbstractAgent,
+  AgentCapabilities,
+} from "@ag-ui/client";

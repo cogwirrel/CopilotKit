@@ -40,3 +40,12 @@ export {
   type UseThreadsInput,
   type UseThreadsResult,
 } from "./hooks/use-threads";
+
+export {
+  useRenderTool,
+  type RenderToolProps,
+  type RenderToolInProgressProps,
+  type RenderToolExecutingProps,
+  type RenderToolCompleteProps,
+} from "./hooks/use-render-tool";
+export { defineToolCallRenderer } from "./types/defineToolCallRenderer";
