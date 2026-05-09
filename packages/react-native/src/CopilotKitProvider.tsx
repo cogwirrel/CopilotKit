@@ -1,15 +1,10 @@
-import React, {
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import {
   CopilotKitContext,
-  type CopilotKitContextValue,
   LicenseContext,
 } from "@copilotkit/react-core/v2/context";
+import type { CopilotKitContextValue } from "@copilotkit/react-core/v2/context";
 import { CopilotKitCoreReact } from "@copilotkit/react-core/v2/headless";
 import type { CopilotKitCoreErrorCode } from "@copilotkit/core";
 
@@ -18,7 +13,11 @@ export interface CopilotKitNativeProviderProps {
   /** URL of the CopilotKit runtime endpoint */
   runtimeUrl: string;
   /** Custom headers sent with every request */
-  headers?: Record<string, string>;
+  headers?: Record<string, string> | (() => Record<string, string>);
+  /**
+   * Credentials mode for fetch requests (e.g., "include" for HTTP-only cookies in cross-origin requests).
+   */
+  credentials?: RequestCredentials;
   /** Whether the runtime uses a single-route endpoint */
   useSingleEndpoint?: boolean;
   /** Custom properties forwarded to agents */
@@ -32,7 +31,7 @@ export interface CopilotKitNativeProviderProps {
     error: Error;
     code: CopilotKitCoreErrorCode;
     context: Record<string, any>;
-  }) => void;
+  }) => void | Promise<void>;
 }
 
 /**
@@ -61,15 +60,23 @@ export interface CopilotKitNativeProviderProps {
 export const CopilotKitProvider: React.FC<CopilotKitNativeProviderProps> = ({
   children,
   runtimeUrl,
-  headers,
+  headers: headersProp,
+  credentials,
   useSingleEndpoint,
   properties,
   onError,
 }) => {
+  // Resolve headers from function or static object (matches web provider pattern)
+  const resolvedHeaders =
+    typeof headersProp === "function" ? headersProp() : headersProp;
+
   // Stabilize headers/properties references to avoid effect churn when callers
   // pass inline object literals (e.g. headers={{}} or the undefined default).
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const stableHeaders = useMemo(() => headers ?? {}, [JSON.stringify(headers)]);
+  const stableHeaders = useMemo(
+    () => resolvedHeaders ?? {},
+    [JSON.stringify(resolvedHeaders)],
+  );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableProperties = useMemo(
     () => properties ?? {},
@@ -88,6 +95,7 @@ export const CopilotKitProvider: React.FC<CopilotKitNativeProviderProps> = ({
             ? "rest"
             : "auto",
       headers: stableHeaders,
+      credentials,
       properties: stableProperties,
     });
   }
@@ -105,11 +113,13 @@ export const CopilotKitProvider: React.FC<CopilotKitNativeProviderProps> = ({
           : "auto",
     );
     copilotkit.setHeaders(stableHeaders);
+    copilotkit.setCredentials(credentials);
     copilotkit.setProperties(stableProperties);
   }, [
     runtimeUrl,
     useSingleEndpoint,
     stableHeaders,
+    credentials,
     stableProperties,
     copilotkit,
   ]);

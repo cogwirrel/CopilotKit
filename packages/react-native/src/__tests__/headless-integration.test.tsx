@@ -28,6 +28,7 @@ function createMockCore() {
     setRuntimeUrl: vi.fn(),
     setRuntimeTransport: vi.fn(),
     setHeaders: vi.fn(),
+    setCredentials: vi.fn(),
     setProperties: vi.fn(),
     getAgent: vi.fn(() => undefined),
     runtimeUrl: "https://api.test",
