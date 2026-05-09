@@ -25,6 +25,10 @@ export type { CopilotKitNativeProviderProps } from "./CopilotKitProvider";
 // Provider props alias (mirrors web's CopilotKitProviderProps)
 export type { CopilotKitNativeProviderProps as CopilotKitProviderProps } from "./CopilotKitProvider";
 
+// CopilotSidebar and CopilotPopup are intentionally not provided.
+// React Native apps build their own chat UI using CopilotChat (headless)
+// or CopilotModal (bottom sheet wrapper).
+
 // Headless chat components (no DOM, consumer provides UI)
 export { CopilotChat } from "./CopilotChat";
 export type { CopilotChatProps } from "./CopilotChat";
@@ -52,8 +56,18 @@ export {
   useAgentContext,
   useThreads,
   useRenderTool,
+  useCapabilities,
   type UseAgentUpdate,
+  type RenderToolProps,
+  type RenderToolInProgressProps,
+  type RenderToolExecutingProps,
+  type RenderToolCompleteProps,
 } from "@copilotkit/react-core/v2/headless";
+
+// useRenderToolCall — web-specific (depends on DOM elements via DefaultToolCallRenderer)
+// useRenderCustomMessages — web-specific (tightly coupled to web chat UI rendering pipeline)
+// useRenderActivityMessage — web-specific (tightly coupled to web chat UI rendering pipeline)
+// useDefaultRenderTool — web-specific (DefaultToolCallRenderer uses <div>, <svg>, etc.)
 
 // Re-export core types commonly needed
 export type {

@@ -28,6 +28,8 @@ function createMockCore() {
     setHeaders: vi.fn(),
     setCredentials: vi.fn(),
     setProperties: vi.fn(),
+    setDebug: vi.fn(),
+    setDefaultThrottleMs: vi.fn(),
   };
 }
 

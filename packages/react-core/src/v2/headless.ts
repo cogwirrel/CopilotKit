@@ -49,3 +49,6 @@ export {
   type RenderToolCompleteProps,
 } from "./hooks/use-render-tool";
 export { defineToolCallRenderer } from "./types/defineToolCallRenderer";
+
+// Platform-agnostic capability introspection
+export { useCapabilities } from "./hooks/use-capabilities";

@@ -7,6 +7,7 @@ import {
 import type { CopilotKitContextValue } from "@copilotkit/react-core/v2/context";
 import { CopilotKitCoreReact } from "@copilotkit/react-core/v2/headless";
 import type { CopilotKitCoreErrorCode } from "@copilotkit/core";
+import type { DebugConfig } from "@copilotkit/shared";
 
 export interface CopilotKitNativeProviderProps {
   children: ReactNode;
@@ -32,6 +33,17 @@ export interface CopilotKitNativeProviderProps {
     code: CopilotKitCoreErrorCode;
     context: Record<string, any>;
   }) => void | Promise<void>;
+  /**
+   * Enable debug logging for the client-side event pipeline.
+   * When `true`, enables verbose logging from the core instance.
+   */
+  debug?: DebugConfig;
+  /**
+   * Default throttle interval (ms) for `onMessagesChanged` / `onStateChanged`
+   * subscriptions. Individual subscriptions can override with their own `throttleMs`.
+   */
+  defaultThrottleMs?: number;
+  // Cloud features (publicApiKey, licenseToken) — not yet supported on React Native
 }
 
 /**
@@ -65,6 +77,8 @@ export const CopilotKitProvider: React.FC<CopilotKitNativeProviderProps> = ({
   useSingleEndpoint,
   properties,
   onError,
+  debug,
+  defaultThrottleMs,
 }) => {
   // Resolve headers from function or static object (matches web provider pattern)
   const resolvedHeaders =
@@ -97,7 +111,13 @@ export const CopilotKitProvider: React.FC<CopilotKitNativeProviderProps> = ({
       headers: stableHeaders,
       credentials,
       properties: stableProperties,
+      debug,
     });
+    // Set initial defaultThrottleMs synchronously so child hooks see the
+    // correct value on their first render (before useEffect fires).
+    if (defaultThrottleMs !== undefined) {
+      copilotkitRef.current.setDefaultThrottleMs(defaultThrottleMs);
+    }
   }
 
   const copilotkit = copilotkitRef.current;
@@ -115,14 +135,23 @@ export const CopilotKitProvider: React.FC<CopilotKitNativeProviderProps> = ({
     copilotkit.setHeaders(stableHeaders);
     copilotkit.setCredentials(credentials);
     copilotkit.setProperties(stableProperties);
+    copilotkit.setDebug(debug);
   }, [
     runtimeUrl,
     useSingleEndpoint,
     stableHeaders,
     credentials,
     stableProperties,
+    debug,
     copilotkit,
   ]);
+
+  // Sync defaultThrottleMs to the core instance on prop changes.
+  // Initial value is set synchronously during instance creation (inside the
+  // ref guard above), so this only handles subsequent updates.
+  useEffect(() => {
+    copilotkit.setDefaultThrottleMs(defaultThrottleMs);
+  }, [copilotkit, defaultThrottleMs]);
 
   // Track executing tool call IDs at the provider level.
   // Critical for HITL reconnection: onToolExecutionStart fires before child
