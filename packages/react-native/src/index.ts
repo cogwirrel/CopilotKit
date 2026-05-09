@@ -4,11 +4,19 @@
  * React Native bindings for CopilotKit. Provides a lightweight provider
  * and re-exports platform-agnostic hooks from @copilotkit/react-core.
  *
+ * Polyfills (DOMException, ReadableStream, TextEncoder, etc.) are
+ * auto-imported when this module loads -- no manual
+ * `import "@copilotkit/react-native/polyfills"` needed.
+ *
  * Quick start:
  * ```tsx
  * import { CopilotKitProvider, useAgent, useCopilotKit } from "@copilotkit/react-native";
  * ```
  */
+
+// Auto-install polyfills so consumers don't need a manual import.
+// Must run before any CopilotKit code that relies on ReadableStream / fetch streaming.
+import "./polyfills";
 
 // React Native provider (no web dependencies)
 export { CopilotKitProvider } from "./CopilotKitProvider";

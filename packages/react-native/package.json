@@ -18,6 +18,7 @@
   },
   "type": "module",
   "sideEffects": [
+    "./dist/index.*",
     "./dist/polyfills.*",
     "./dist/polyfills/**/*"
   ],

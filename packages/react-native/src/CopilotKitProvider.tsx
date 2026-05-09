@@ -41,9 +41,12 @@ export interface CopilotKitNativeProviderProps {
  * A lightweight alternative to the web CopilotKitProvider that avoids
  * web-only dependencies (DOM, CSS, Radix UI, Lit, etc).
  *
+ * Polyfills are auto-imported when `@copilotkit/react-native` is loaded,
+ * so a separate `import "@copilotkit/react-native/polyfills"` is no longer
+ * required (though it remains available for advanced use).
+ *
  * Usage:
  * ```tsx
- * import "@copilotkit/react-native/polyfills";
  * import { CopilotKitProvider } from "@copilotkit/react-native";
  *
  * function App() {
