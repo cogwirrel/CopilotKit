@@ -375,5 +375,4 @@ describe("Headless integration", () => {
       spy.mockRestore();
     });
   });
-
 });
